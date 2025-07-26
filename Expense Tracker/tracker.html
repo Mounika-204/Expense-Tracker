@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Tracker Dashboard</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="tracker.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">👜 Expense Tracker</a>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    
+    <!-- Form Section -->
+    <div class="form-section">
+      <h4 class="mb-3">Add New Expense</h4>
+      <form id="expense-form">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input type="text" class="form-control" id="expense-name" placeholder="Expense Name" required>
+          </div>
+          <div class="col-md-4">
+            <input type="number" class="form-control" id="expense-amount" placeholder="Amount ₹" required>
+          </div>
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-add w-100">Add Expense</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-section">
+      <h5 class="mb-3">Your Expenses</h5>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Expense Name</th>
+            <th>Amount (₹)</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="expense-list">
+          <!-- Dynamic rows will be added here -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Script -->
+  <script>
+        // Display user name from localStorage if available
+   const welcome = document.getElementById('welcome-user');
+   const storedName = localStorage.getItem('username');
+   if (storedName) {
+   welcome.textContent = `Welcome back, ${storedName}!`;
+    }
+
+    const form = document.getElementById('expense-form');
+    const nameInput = document.getElementById('expense-name');
+    const amountInput = document.getElementById('expense-amount');
+    const list = document.getElementById('expense-list');
+
+    let expenses = [];
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const amount = amountInput.value.trim();
+
+      if (name && amount) {
+        expenses.push({ name, amount });
+        renderExpenses();
+        form.reset();
+      }
+    });
+
+    function renderExpenses() {
+      list.innerHTML = '';
+      expenses.forEach((exp, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${exp.name}</td>
+          <td>₹ ${exp.amount}</td>
+          <td><button class="btn btn-sm btn-danger" onclick="deleteExpense(${index})">Delete</button></td>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function deleteExpense(index) {
+      expenses.splice(index, 1);
+      renderExpenses();
+    }
+  </script>
+
+</body>
+</html>
